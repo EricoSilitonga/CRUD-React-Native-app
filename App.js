@@ -10,10 +10,13 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  TouchableOpacity,
   StyleSheet,
   Text,
+  TextInput,
   useColorScheme,
   View,
+  Alert,
 } from 'react-native';
 import axios from 'axios';
 import {
@@ -27,7 +30,11 @@ import {
 
 
 function App() {
-  const[data, setData] = useState([]);
+  const[data, setData] = useState({
+    namaKaryawan : "Temp",
+    roleKaryawan : "Temp",
+    nik : "00"
+  });
 
 
   useEffect(()=>{fetchData()},[]);
@@ -41,8 +48,8 @@ const fetchData = ()=>{
 // console.log(responseJson.data.data[0].nama_karyawan);
 
   setData(responseJson.data.data);
-  //Masukin data ke array of strings disini
-  //Munculin data di return text
+
+  
   })
   .catch(function (error) {
       console.log(error)
@@ -53,20 +60,30 @@ const fetchData = ()=>{
   <>
       {/* Jalanin const berdasarkan length si data */}
       <View style = {styles.container}>
-        <ScrollView>
-          <View>
-            {data.map((number, index)=>{
-              return(
-                <View key = {index}>
-                  <Text>Nama Karyawan: {number.nama_karyawan}</Text>
-                  <Text>Role Karyawan: {number.role_karyawan}</Text>
-                  <Text>NIK Karyawan: {number.nik}</Text>
-                  <Text> </Text>
-                </View>
-              )
-            })}
-          </View>
-        </ScrollView>
+      <Text>Nama Karyawan:</Text>
+      <TextInput
+        style={styles.input}
+        value={data.namaKaryawan}
+        onChangeText={(text) => setNamaKaryawan(text)}
+      />
+
+      <Text>Role Karyawan:</Text>
+      <TextInput
+        style={styles.input}
+        value={data.roleKaryawan}
+        onChangeText={(text) => setRoleKaryawan(text)}
+      />
+
+      <Text>NIK Karyawan:</Text>
+      <TextInput
+        style={styles.input}
+        value={data.nik}
+        onChangeText={(text) => setNik(text)}
+      />
+
+      <TouchableOpacity style={styles.button} onPress={Alert.alert("Is pressed")}>
+        <Text style={styles.buttonText}>Upload Data</Text>
+      </TouchableOpacity>
       </View>
     </>
   );
