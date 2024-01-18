@@ -6,7 +6,6 @@
  */
 
 import React,{useState, useEffect} from 'react';
-
 import {
   SafeAreaView,
   ScrollView,
@@ -28,11 +27,7 @@ import {
 
 
 function App() {
-  const[data, setData] = useState({
-    nik : "",
-    nama : "",
-    role : ""
-  });
+  const[data, setData] = useState([]);
 
 
   useEffect(()=>{fetchData()},[]);
@@ -43,9 +38,9 @@ const fetchData = ()=>{
 .then((responseJson) => {
   // setNama(responseJson.data.data[0].nama_karyawan);
   // console.log("aaababbaa",responseJson.data);
+// console.log(responseJson.data.data[0].nama_karyawan);
+
   setData(responseJson.data.data);
-
-
   //Masukin data ke array of strings disini
   //Munculin data di return text
   })
@@ -54,13 +49,26 @@ const fetchData = ()=>{
   });
 }
   return (
-    //Jalanin const berdasarkan length si data
-  <View>
-    <Text>Test</Text>
-    <Text>Nama Karyawan: {data.nama}</Text>
-    <Text>Role Karyawan: {data.role}</Text>
-    <Text>NIK Karyawan: {data.nik}</Text>
-  </View>
+    
+  <>
+      {/* Jalanin const berdasarkan length si data */}
+      <View style = {styles.container}>
+        <ScrollView>
+          <View>
+            {data.map((number, index)=>{
+              return(
+                <View key = {index}>
+                  <Text>Nama Karyawan: {number.nama_karyawan}</Text>
+                  <Text>Role Karyawan: {number.role_karyawan}</Text>
+                  <Text>NIK Karyawan: {number.nik}</Text>
+                  <Text> </Text>
+                </View>
+              )
+            })}
+          </View>
+        </ScrollView>
+      </View>
+    </>
   );
 }
 
