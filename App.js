@@ -34,18 +34,18 @@ function App() {
 const[namaKaryawan, setNamaKaryawan] = useState('');
 const[roleKaryawan, setRoleKaryawan] = useState('');
 const[nikKaryawan,setNikKaryawan] = useState('');
-
-const handleButtonPress = () => {
+const[data,setData] = useState([]);
+const handleButtonPress = (actionType) => {
   const requestData = {
     role_karyawan: roleKaryawan,
     nama_karyawan: namaKaryawan,
     nik: nikKaryawan,
+    action: actionType
   };
-  console.log('Request Data:', requestData);
   axios.post('https://www.raksa-test.com/prog-x/api/form_req/testApi.php',JSON.stringify(requestData))
   .then((response) => {
-    console.log('API Response: ', response.data);
     Alert.alert('Data berhasil diupload!');
+    console.log(response.data);
     })
     .catch(function (error) {
         console.log(error)
@@ -78,9 +78,25 @@ const handleButtonPress = () => {
         placeholder="useless placeholder"
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
+      <TouchableOpacity style={styles.button} onPress={handleButtonPress('addData')}>
         <Text style={styles.buttonText}>Upload Data</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={handleButtonPress('seeData')}>
+        <Text style={styles.buttonText}>See Data</Text> 
+      </TouchableOpacity>
+      <View>
+            {data.map((number, index)=>{
+              return(
+                <View key = {index}>
+                  <Text>Nama Karyawan: {number.nama_karyawan}</Text>
+                  <Text>Role Karyawan: {number.role_karyawan}</Text>
+                  <Text>NIK Karyawan: {number.nik}</Text>
+                  <Text> </Text>
+                </View>
+              )
+            })}
+          </View>
       </SafeAreaView>
     </>
   );
