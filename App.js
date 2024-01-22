@@ -30,69 +30,68 @@ import {
 
 
 function App() {
-  const[data, setData] = useState({
-    namaKaryawan : "Temp",
-    roleKaryawan : "Temp",
-    nik : "00"
-  });
 
+const[namaKaryawan, setNamaKaryawan] = useState('');
+const[roleKaryawan, setRoleKaryawan] = useState('');
+const[nikKaryawan,setNikKaryawan] = useState('');
 
-  useEffect(()=>{fetchData()},[]);
+const handleButtonPress = () => {
+  const requestData = {
+    role_karyawan: roleKaryawan,
+    nama_karyawan: namaKaryawan,
+    nik: nikKaryawan,
+  };
+  console.log('Request Data:', requestData);
+  axios.post('https://www.raksa-test.com/prog-x/api/form_req/testApi.php',JSON.stringify(requestData))
+  .then((response) => {
+    console.log('API Response: ', response.data);
+    Alert.alert('Data berhasil diupload!');
+    })
+    .catch(function (error) {
+        console.log(error)
+    });
+};
 
-
-const fetchData = ()=>{
-  axios.post('https://www.raksa-test.com/prog-x/api/form_req/testApi.php')
-.then((responseJson) => {
-  // setNama(responseJson.data.data[0].nama_karyawan);
-  // console.log("aaababbaa",responseJson.data);
-// console.log(responseJson.data.data[0].nama_karyawan);
-
-  setData(responseJson.data.data);
-
-  
-  })
-  .catch(function (error) {
-      console.log(error)
-  });
-}
   return (
     
   <>
-      {/* Jalanin const berdasarkan length si data */}
-      <View style = {styles.container}>
+      <SafeAreaView style = {styles.container}>
       <Text>Nama Karyawan:</Text>
       <TextInput
         style={styles.input}
-        value={data.namaKaryawan}
+        value={namaKaryawan}
         onChangeText={(text) => setNamaKaryawan(text)}
       />
 
       <Text>Role Karyawan:</Text>
       <TextInput
         style={styles.input}
-        value={data.roleKaryawan}
+        value={roleKaryawan}
         onChangeText={(text) => setRoleKaryawan(text)}
       />
 
       <Text>NIK Karyawan:</Text>
       <TextInput
         style={styles.input}
-        value={data.nik}
-        onChangeText={(text) => setNik(text)}
+        value={nikKaryawan}
+        onChangeText={(text) => setNikKaryawan(text)}
+        placeholder="useless placeholder"
       />
 
-      <TouchableOpacity style={styles.button} onPress={Alert.alert("Is pressed")}>
+      <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
         <Text style={styles.buttonText}>Upload Data</Text>
       </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     </>
   );
 }
 
-//Looping data
-
-
+//Styles
 const styles = StyleSheet.create({
+  container:{
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
@@ -109,6 +108,26 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: '700',
   },
+  input: {
+    height: 40,
+    width: 100,
+    margin: 12,
+    padding: 10,
+    borderWidth: 1
+  },
+  button:{
+    backgroundColor: '#3498db',
+    width: 300,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  buttonText:{
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  }
 });
 
 export default App;
