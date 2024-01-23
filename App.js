@@ -34,18 +34,45 @@ function App() {
 const[namaKaryawan, setNamaKaryawan] = useState('');
 const[roleKaryawan, setRoleKaryawan] = useState('');
 const[nikKaryawan,setNikKaryawan] = useState('');
-const[data,setData] = useState([]);
-const handleButtonPress = (actionType) => {
+const[data, setData] = useState([]);
+
+const editData = () =>{
   const requestData = {
     role_karyawan: roleKaryawan,
     nama_karyawan: namaKaryawan,
     nik: nikKaryawan,
-    action: actionType
+    key_id: 'EFOSEfhosSEfSf'
   };
-  axios.post('https://www.raksa-test.com/prog-x/api/form_req/testApi.php',JSON.stringify(requestData))
+}
+
+const seeData = () =>{
+  const requestData = {
+    role_karyawan: roleKaryawan,
+    nama_karyawan: namaKaryawan,
+    nik: nikKaryawan,
+    key_id: 'fhwejlakflawekb'
+  };
+  axios.post('https://www.raksa-test.com/prog-x/api/form_req/apiRico.php',JSON.stringify(requestData))
+  .then((response) =>{
+    setData(response.data.data);
+  })
+  .catch(function(error){
+    console.log(error)
+  });
+}
+
+const addData = () => { 
+  const requestData = {
+    role_karyawan: roleKaryawan,
+    nama_karyawan: namaKaryawan,
+    nik: nikKaryawan,
+    key_id: 'asfnSFEefsefSE'
+  };
+  
+  axios.post('https://www.raksa-test.com/prog-x/api/form_req/apiRico.php',JSON.stringify(requestData))
   .then((response) => {
+    console.log('API Response: ', response.data);
     Alert.alert('Data berhasil diupload!');
-    console.log(response.data);
     })
     .catch(function (error) {
         console.log(error)
@@ -55,49 +82,55 @@ const handleButtonPress = (actionType) => {
   return (
     
   <>
-      <SafeAreaView style = {styles.container}>
-      <Text>Nama Karyawan:</Text>
-      <TextInput
-        style={styles.input}
-        value={namaKaryawan}
-        onChangeText={(text) => setNamaKaryawan(text)}
-      />
+      <ScrollView contentContainerStyle = {styles.container}>
+        <Text>Nama Karyawan:</Text>
+        <TextInput
+          style={styles.input}
+          value={namaKaryawan}
+          onChangeText={(text) => setNamaKaryawan(text)}
+        />
 
-      <Text>Role Karyawan:</Text>
-      <TextInput
-        style={styles.input}
-        value={roleKaryawan}
-        onChangeText={(text) => setRoleKaryawan(text)}
-      />
+        <Text>Role Karyawan:</Text>
+        <TextInput
+          style={styles.input}
+          value={roleKaryawan}
+          onChangeText={(text) => setRoleKaryawan(text)}
+        />
 
-      <Text>NIK Karyawan:</Text>
-      <TextInput
-        style={styles.input}
-        value={nikKaryawan}
-        onChangeText={(text) => setNikKaryawan(text)}
-        placeholder="useless placeholder"
-      />
+        <Text>NIK Karyawan:</Text>
+        <TextInput
+          style={styles.input}
+          value={nikKaryawan}
+          onChangeText={(text) => setNikKaryawan(text)}
+          placeholder="useless placeholder"
+        />
 
-      <TouchableOpacity style={styles.button} onPress={handleButtonPress('addData')}>
-        <Text style={styles.buttonText}>Upload Data</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => addData()}>
+          <Text style={styles.buttonText}>Upload Data</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={handleButtonPress('seeData')}>
-        <Text style={styles.buttonText}>See Data</Text> 
-      </TouchableOpacity>
-      <View>
-            {data.map((number, index)=>{
-              return(
-                <View key = {index}>
-                  <Text>Nama Karyawan: {number.nama_karyawan}</Text>
-                  <Text>Role Karyawan: {number.role_karyawan}</Text>
-                  <Text>NIK Karyawan: {number.nik}</Text>
-                  <Text> </Text>
-                </View>
-              )
-            })}
-          </View>
-      </SafeAreaView>
+        <TouchableOpacity style={styles.button} onPress={() => seeData()}>
+          <Text style={styles.buttonText}>See Data</Text> 
+        </TouchableOpacity>
+        <View>
+              {data.map((number, index)=>{
+                return(
+                  <ScrollView key = {index}>
+                    <Text>Nama Karyawan: {number.nama_karyawan}</Text>
+                    <Text>Role Karyawan: {number.role_karyawan}</Text>
+                    <Text>NIK Karyawan: {number.nik}</Text>
+                    
+                    {/* Bikin biar begitu user klik edit data, muncul TextInput untuk edit*/}
+                    <TouchableOpacity style={styles.button2} onPress={()=> editData()}>
+                      <Text style={styles.buttonText}>Edit Data</Text> 
+                      {/* Setelah pencet save, TextInput sebelumnya akan hilang */}
+                      {/* Data */}
+                    </TouchableOpacity> 
+                  </ScrollView>
+                )
+              })}
+            </View>
+      </ScrollView>
     </>
   );
 }
@@ -105,8 +138,9 @@ const handleButtonPress = (actionType) => {
 //Styles
 const styles = StyleSheet.create({
   container:{
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 16,
+    alignItems: 'center', // Align items horizontally in the center
+    justifyContent: 'center', // Align items vertically in the center
   },
   sectionContainer: {
     marginTop: 32,
@@ -134,6 +168,14 @@ const styles = StyleSheet.create({
   button:{
     backgroundColor: '#3498db',
     width: 300,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  button2:{
+    backgroundColor: '#3498db',
+    width: 100,
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
