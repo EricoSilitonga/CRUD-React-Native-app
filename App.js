@@ -31,18 +31,44 @@ import {
 
 function App() {
 
+const[editIndex, setEditIndex] = useState(null);
+const[isTextInputVisible, setIsTextInputVisible] = useState(false);
 const[namaKaryawan, setNamaKaryawan] = useState('');
 const[roleKaryawan, setRoleKaryawan] = useState('');
 const[nikKaryawan,setNikKaryawan] = useState('');
 const[data, setData] = useState([]);
 
-const editData = () =>{
+const editData = (index) =>{
+  setEditIndex(index);
+  setNamaKaryawan(data[index].nama_karyawan);
+  setRoleKaryawan(data[index].role_karyawan);
+  setNikKaryawan(data[index].nik);
+  setIsTextInputVisible(true);
+}
+
+const saveData = () =>{
   const requestData = {
     role_karyawan: roleKaryawan,
     nama_karyawan: namaKaryawan,
     nik: nikKaryawan,
     key_id: 'EFOSEfhosSEfSf'
   };
+
+  axios.post('https://www.raksa-test.com/prog-x/api/form_req/apiRico.php', JSON.stringify(requestData))
+    .then((response) => {
+      if (response.data && response.data.status === 1) {
+        // Data was successfully updated on the server
+        Alert.alert('Data dirubah');
+      } else {
+        // Handle the case where the update was not successful
+        Alert.alert('Failed to update data');
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+      // Handle the error
+      Alert.alert('Failed to update data');
+    });
 }
 
 const seeData = () =>{
@@ -77,8 +103,26 @@ const addData = () => {
     .catch(function (error) {
         console.log(error)
     });
-};
+}
 
+const deleteData = (index) =>{
+  const nikToDelete = data[index].nik;
+  const requestData = {
+    role_karyawan: roleKaryawan,
+    nama_karyawan: namaKaryawan,
+    nik: nikToDelete,
+    key_id: 'SDFOJo324efwe'
+  };
+
+  axios.post('https://www.raksa-test.com/prog-x/api/form_req/apiRico.php',JSON.stringify(requestData))
+  .then((response) => {
+    console.log('API Response: ', response.data);
+    Alert.alert('Data berhasil dihapus!');
+    })
+    .catch(function (error) {
+        console.log(error)
+    });
+}
   return (
     
   <>
@@ -120,12 +164,34 @@ const addData = () => {
                     <Text>Role Karyawan: {number.role_karyawan}</Text>
                     <Text>NIK Karyawan: {number.nik}</Text>
                     
-                    {/* Bikin biar begitu user klik edit data, muncul TextInput untuk edit*/}
-                    <TouchableOpacity style={styles.button2} onPress={()=> editData()}>
+                    <TouchableOpacity style={styles.button2} onPress={()=> editData(index)}>
                       <Text style={styles.buttonText}>Edit Data</Text> 
-                      {/* Setelah pencet save, TextInput sebelumnya akan hilang */}
-                      {/* Data */}
                     </TouchableOpacity> 
+                    <TouchableOpacity style={styles.button2} onPress={()=> deleteData(index)}>
+                      <Text style={styles.buttonText}>Delete Data</Text> 
+                    </TouchableOpacity> 
+                      { isTextInputVisible && editIndex === index && (
+                        <>
+                          <Text>Enter Data: </Text>
+                          <Text>Nama Karyawan:</Text>
+                          <TextInput
+                            style={styles.input}
+                            value={namaKaryawan}
+                            onChangeText={(text) => setNamaKaryawan(text)}
+                          />
+
+                          <Text>Role Karyawan:</Text>
+                          <TextInput
+                            style={styles.input}
+                            value={roleKaryawan}
+                            onChangeText={(text) => setRoleKaryawan(text)}
+                          />
+
+                        <TouchableOpacity style={styles.button2} onPress={()=> saveData()}>
+                          <Text style={styles.buttonText}>Save</Text> 
+                        </TouchableOpacity> 
+                        </>
+              )}
                   </ScrollView>
                 )
               })}
