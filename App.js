@@ -5,6 +5,7 @@
  * @format
  */
 
+import ImagePicker from 'react-native-image-picker';
 import React,{useState, useEffect} from 'react';
 import {
   SafeAreaView,
@@ -124,78 +125,9 @@ const deleteData = (index) =>{
     });
 }
   return (
-    
   <>
       <ScrollView contentContainerStyle = {styles.container}>
-        <Text>Nama Karyawan:</Text>
-        <TextInput
-          style={styles.input}
-          value={namaKaryawan}
-          onChangeText={(text) => setNamaKaryawan(text)}
-        />
-
-        <Text>Role Karyawan:</Text>
-        <TextInput
-          style={styles.input}
-          value={roleKaryawan}
-          onChangeText={(text) => setRoleKaryawan(text)}
-        />
-
-        <Text>NIK Karyawan:</Text>
-        <TextInput
-          style={styles.input}
-          value={nikKaryawan}
-          onChangeText={(text) => setNikKaryawan(text)}
-          placeholder="useless placeholder"
-        />
-
-        <TouchableOpacity style={styles.button} onPress={() => addData()}>
-          <Text style={styles.buttonText}>Upload Data</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button} onPress={() => seeData()}>
-          <Text style={styles.buttonText}>See Data</Text> 
-        </TouchableOpacity>
-        <View>
-              {data.map((number, index)=>{
-                return(
-                  <ScrollView key = {index}>
-                    <Text>Nama Karyawan: {number.nama_karyawan}</Text>
-                    <Text>Role Karyawan: {number.role_karyawan}</Text>
-                    <Text>NIK Karyawan: {number.nik}</Text>
-                    
-                    <TouchableOpacity style={styles.button2} onPress={()=> editData(index)}>
-                      <Text style={styles.buttonText}>Edit Data</Text> 
-                    </TouchableOpacity> 
-                    <TouchableOpacity style={styles.button2} onPress={()=> deleteData(index)}>
-                      <Text style={styles.buttonText}>Delete Data</Text> 
-                    </TouchableOpacity> 
-                      { isTextInputVisible && editIndex === index && (
-                        <>
-                          <Text>Enter Data: </Text>
-                          <Text>Nama Karyawan:</Text>
-                          <TextInput
-                            style={styles.input}
-                            value={namaKaryawan}
-                            onChangeText={(text) => setNamaKaryawan(text)}
-                          />
-
-                          <Text>Role Karyawan:</Text>
-                          <TextInput
-                            style={styles.input}
-                            value={roleKaryawan}
-                            onChangeText={(text) => setRoleKaryawan(text)}
-                          />
-
-                        <TouchableOpacity style={styles.button2} onPress={()=> saveData()}>
-                          <Text style={styles.buttonText}>Save</Text> 
-                        </TouchableOpacity> 
-                        </>
-              )}
-                  </ScrollView>
-                )
-              })}
-            </View>
+        
       </ScrollView>
     </>
   );
