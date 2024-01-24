@@ -5,9 +5,10 @@
  * @format
  */
 
-import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import React,{useState, useEffect} from 'react';
 import {
+  Image,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -18,6 +19,7 @@ import {
   useColorScheme,
   View,
   Alert,
+  Dimensions
 } from 'react-native';
 import axios from 'axios';
 import {
@@ -32,12 +34,15 @@ import {
 
 function App() {
 
+let [avatarSource, setavatarSource]               = useState("");
 const[editIndex, setEditIndex] = useState(null);
 const[isTextInputVisible, setIsTextInputVisible] = useState(false);
 const[namaKaryawan, setNamaKaryawan] = useState('');
 const[roleKaryawan, setRoleKaryawan] = useState('');
 const[nikKaryawan,setNikKaryawan] = useState('');
 const[data, setData] = useState([]);
+const[image, setImage] = useState();
+const {width: WIDTH} = Dimensions.get('window');
 
 const editData = (index) =>{
   setEditIndex(index);
@@ -124,16 +129,51 @@ const deleteData = (index) =>{
         console.log(error)
     });
 }
-  return (
-  <>
-      <ScrollView contentContainerStyle = {styles.container}>
-        
-      </ScrollView>
-    </>
-  );
+
+const uploadImage = () =>{
+  const requestData = {
+    image : image,
+    key_id : 'SdflFSJDKLfjSdnf'
+  };
+  axios.post('https://www.raksa-test.com/prog-x/api/form_req/apiRico.php', requestData)
+  .then((response)=>{
+    console.log(response.data);
+  })
 }
 
+return (
+  <>
+      <TouchableOpacity style={{backgroundColor: 'green', marginTop: 20, width: WIDTH - 55, padding: 10}}
+                    activeOpacity={0.3}
+                    onPress={() => { uploadImage()}}
+                  >
+                    <Text style={{color: 'white', fontWeight:'bold',alignSelf:'center'}}>Upload Gambar (Wajib)</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={{backgroundColor: 'green', marginTop: 20, width: WIDTH - 55, padding: 10}}
+                    activeOpacity={0.3}
+                    onPress={() => {
+                      ImagePicker.openCamera({
+                        width: 500,
+                        height: 500,
+                        compressImageMaxWidth:500,
+                        mediaType: 'photo',
+                        // multiple: false,
+                        cropping: false
+                      }).then((image) => {
+                        // Handle the selected image, for example, set it to the state
+                        setAvatarSource({ uri: image.path });
+                        });
+                    }}
+        ></TouchableOpacity>
+      <Image
+            source={{uri :avatarSource.path}}
+            style={{marginTop: 20, width: WIDTH - 55, height: 300}}
+                  />
+    </>
+  );
+
 //Styles
+}
 const styles = StyleSheet.create({
   container:{
     padding: 16,
@@ -185,5 +225,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   }
 });
-
 export default App;
